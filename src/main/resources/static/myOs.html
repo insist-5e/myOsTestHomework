@@ -120,8 +120,8 @@
             });
         }
     });
-    let ii=0;
     $("#run").click(function() {
+        let ii=0;
         tmp.name=$("#name1").val();
         tmp.path=$("#path1").val();
         $.ajax({
@@ -131,7 +131,7 @@
             data: JSON.stringify(tmp),
             contentType: "application/json;charset=utf-8",
         });
-        for(var i=0;i<tmp.mem+1;i++) {
+        for(var i=0;i<tmp.mem*5;i++) {
             setTimeout(function() {
                 $.ajax({
                     url: "/get",
