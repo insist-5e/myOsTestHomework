@@ -3,147 +3,220 @@
 <head>
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>myOs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .head{
+            height: 100px;
+            width: 100%;
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 5px;
+        }
+        .container{
+            position: absolute;
+            width: 100%;
+            display: flex;
+            top: 100px;
+            bottom: 100px;
+        }
+        .left-group{
+            font-size: 14px;
+            width: 420px;
+            /*text-align: center;*/
+            line-height: 30px;
+            background-color: #eeeeee;
+            color: black;
+            padding: 5px;
+        }
+        .right-group{
+            font-size: 18px;
+            width: 180px;
+            text-align: center;
+            line-height: 30px;
+            background-color: #eeeeee;
+            color: black;
+            padding: 5px;
+        }
+        .mid-group{
+            font-size: 22px;
+            flex: 1;
+            background-color: white;
+            text-align: center;
+        }
+        .foot{
+            font-size: 18px;
+            position: absolute;
+            width: 100%;
+            height: 400px;
+            bottom: 0;
+            background-color: black;
+            color: white;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<div id="api">
-
-    路径：   <input id="path0"><br>
-    文件名：<input id="name0"><br>
-    大小：   <input id="mem"><br>
-    内容：   <input id="content"><br>
-    用户：   <input id="user"><br>
-    时间：   <input id="time"><br>
-    <button id="build">文件写入外存</button><br>
-    路径：   <input id="path1"><br>
-    文件名：<input id="name1"><br>
-    <button id="run">文件调入内存</button><br>
-    路径：   <input id="path2"><br>
-    文件名：<input id="name2"><br>
-    <button id="del">文件外存删除</button><br>
-    <br>
-    <button id="refresh">清空系统</button><br>
-</div>
-<div id="direct">
-
-</div>
-<div id="inMemory">
-
-</div>
-<div id="outMemory">
-
-</div>
-<script>
-    var tmp={
-        "flag": "1",
-        "mem" : 8,
-        "address":"-1",
-        "name": "file0",
-        "content": "success",
-        "path" : "root/child1/child2/child3/",
-        "user" : "lsy",
-        "time" : "1208",
-    };
-    let tt;
-    function succ(data){
-        $("#direct").html(
-            data.direct.direct
-        );
-        let i=0,str="<pre>";
-        tt=data.inMemory.inMemory;
-        for(let key in data.inMemory.inMemory){
-            ++i;
-            str+=key+":"+data.inMemory.inMemory[key]+" ";
-            if(i%8==0) str+="\n";
-        }
-        str+="<pre>";
-        let str1="<pre>";
-        for(let key in data.outMemory.outMemory){
-            str1+=key+":"+data.outMemory.outMemory[key]+"\n";
-        }
-        str1+="<pre>";
-        $("#inMemory").html(
-            str
-        );
-        $("#outMemory").html(
-            str1
-        );
-    }
-
-    $("#refresh").click(function() {
-        $.ajax({
-            url: "/refresh",
-            type: "POST",
-            dataType: "json",
-            data: JSON.stringify(tmp),
-            contentType: "application/json;charset=utf-8",
-            success: succ
-        });
-    });
-
-    $("#build").click(function(){
-        //后端加入文件内容
-        tmp.name=$("#name0").val();
-        if($("#mem").val()!="") tmp.mem=$("#mem").val();
-        if($("#content").val()!="")tmp.content=$("#content").val();
-        tmp.path=$("#path0").val();
-        if($("#user").val()!="")tmp.user=$("#user").val();
-        if($("#time").val()!="")tmp.time=$("#time").val();
-        $.ajax({
-            url:"/new",
-            type:"POST",
-            dataType:"json",
-            data:JSON.stringify(tmp),
-            contentType:"application/json;charset=utf-8",
-            success:succ
-        });
-    });
-    $("#del").click(function() {
-        let flag=0;
-        tmp.name=$("#name2").val();
-        tmp.path=$("#path2").val();
-        for(let key in tt){
-            if(tt[key].indexOf(tmp.name)!=-1){
-                flag=1;
-                $("#direct").append("在内存中无法删除");
-                break;
+    <div class="content">
+        <div class="head">
+            <h1>OS Virtual System</h1>
+        </div>
+        <div class="container">
+            <div class="left-group">
+                <h3>文件目录</h3>
+                <div id="direct">
+<!--                    fefewa-->
+                </div>
+            </div>
+            <div class="mid-group">
+                <h3>内存使用情况</h3>
+                <div id="inMemory">
+<!--                    feaf-->
+                </div>
+            </div>
+            <div class="right-group">
+                <h3>外存使用情况</h3>
+                <div id="outMemory">
+<!--                    feafe-->
+                </div>
+            </div>
+        </div>
+        <div class="foot">
+            --by lsy<br>
+            路径：   <input id="path0"><br>
+            文件名：<input id="name0"><br>
+            大小：   <input id="mem"><br>
+            内容：   <input id="content"><br>
+            用户：   <input id="user"><br>
+            时间：   <input id="time"><br>
+            <button id="build">文件写入外存</button><br>
+            路径：   <input id="path1"><br>
+            文件名：<input id="name1"><br>
+            <button id="run">文件调入内存</button><br>
+            路径：   <input id="path2"><br>
+            文件名：<input id="name2"><br>
+            <button id="del">文件外存删除</button><br>
+            <br>
+            <button id="refresh">清空系统</button><br>
+        </div>
+    </div>
+    <script>
+        var tmp={
+            "flag": "1",
+            "mem" : 8,
+            "address":"-1",
+            "name": "file0",
+            "content": "success",
+            "path" : "root/child1/child2/child3/",
+            "user" : "lsy",
+            "time" : "1208",
+        };
+        let tt;
+        function succ(data){
+            $("#direct").html(
+                data.direct.direct
+            );
+            let i=0,str="<pre>";
+            tt=data.inMemory.inMemory;
+            for(let key in data.inMemory.inMemory){
+                ++i;
+                str+=key+":"+data.inMemory.inMemory[key]+" ";
+                if(i%8==0) str+="\n";
             }
+            str+="<pre>";
+            let str1="<pre>";
+            for(let key in data.outMemory.outMemory){
+                str1+=key+":"+data.outMemory.outMemory[key]+"\n";
+            }
+            str1+="<pre>";
+            $("#inMemory").html(
+                str
+            );
+            $("#outMemory").html(
+                str1
+            );
         }
-        if(flag==0) {
+
+        $("#refresh").click(function() {
             $.ajax({
-                url: "/del",
+                url: "/refresh",
                 type: "POST",
                 dataType: "json",
                 data: JSON.stringify(tmp),
                 contentType: "application/json;charset=utf-8",
                 success: succ
             });
-        }
-    });
-    $("#run").click(function() {
-        let ii=0;
-        tmp.name=$("#name1").val();
-        tmp.path=$("#path1").val();
-        $.ajax({
-            url: "/run",
-            type: "POST",
-            dataType: "json",
-            data: JSON.stringify(tmp),
-            contentType: "application/json;charset=utf-8",
         });
-        for(var i=0;i<tmp.mem*5;i++) {
-            setTimeout(function() {
+
+        $("#build").click(function(){
+            //后端加入文件内容
+            tmp.name=$("#name0").val();
+            if($("#mem").val()!="") tmp.mem=$("#mem").val();
+            if($("#content").val()!="")tmp.content=$("#content").val();
+            tmp.path=$("#path0").val();
+            if($("#user").val()!="")tmp.user=$("#user").val();
+            if($("#time").val()!="")tmp.time=$("#time").val();
+            $.ajax({
+                url:"/new",
+                type:"POST",
+                dataType:"json",
+                data:JSON.stringify(tmp),
+                contentType:"application/json;charset=utf-8",
+                success:succ
+            });
+        });
+        $("#del").click(function() {
+            let flag=0;
+            tmp.name=$("#name2").val();
+            tmp.path=$("#path2").val();
+            for(let key in tt){
+                if(tt[key].indexOf(tmp.name)!=-1){
+                    flag=1;
+                    $("#direct").append("在内存中无法删除");
+                    break;
+                }
+            }
+            if(flag==0) {
                 $.ajax({
-                    url: "/get",
+                    url: "/del",
                     type: "POST",
                     dataType: "json",
                     data: JSON.stringify(tmp),
                     contentType: "application/json;charset=utf-8",
                     success: succ
                 });
-            },(++ii)*1050);
-        }
-    });
-</script>
+            }
+        });
+        $("#run").click(function() {
+            let ii=0;
+            tmp.name=$("#name1").val();
+            tmp.path=$("#path1").val();
+            $.ajax({
+                url: "/run",
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify(tmp),
+                contentType: "application/json;charset=utf-8",
+            });
+            for(var i=0;i<tmp.mem*5;i++) {
+                setTimeout(function() {
+                    $.ajax({
+                        url: "/get",
+                        type: "POST",
+                        dataType: "json",
+                        data: JSON.stringify(tmp),
+                        contentType: "application/json;charset=utf-8",
+                        success: succ
+                    });
+                },(++ii)*1050);
+            }
+        });
+    </script>
 </body>
 </html>

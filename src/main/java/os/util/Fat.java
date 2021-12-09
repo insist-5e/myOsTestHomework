@@ -23,12 +23,12 @@ public class Fat{
 
     @Override
     public String toString() {
-        return "{" +
+        return "\n信息{" +
                 "mem=" + mem +
-                ", address=" + address +
-                ", content='" + content + '\'' +
-                ", user='" + user + '\'' +
-                ", time='" + time + '\'' +
+                ",address=" + address +
+                ",\ncontent='" + content + '\'' +
+                ",user='" + user + '\'' +
+                ",time='" + time + '\'' +
                 '}';
     }
 }
