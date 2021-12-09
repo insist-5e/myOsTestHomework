@@ -21,12 +21,7 @@ public class Run {
     public Memory memory;
 
     @PostMapping("/run")
-    public ResultPage putIn(@RequestBody Fat fat){
+    public void putIn(@RequestBody Fat fat){
         memory.fileC(fat.name);
-        return memory.getResultPage();
-    }
-    public void free(){
-        memory.free();
-        System.out.println("线程已结束，内存释放成功！");
     }
 }

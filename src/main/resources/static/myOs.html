@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <title>myOs</title>
+</head>
+<body>
+<div id="api">
+
+    路径：   <input id="path0"><br>
+    文件名：<input id="name0"><br>
+    大小：   <input id="mem"><br>
+    内容：   <input id="content"><br>
+    用户：   <input id="user"><br>
+    时间：   <input id="time"><br>
+    <button id="build">文件写入外存</button><br>
+    路径：   <input id="path1"><br>
+    文件名：<input id="name1"><br>
+    <button id="run">文件调入内存</button><br>
+    路径：   <input id="path2"><br>
+    文件名：<input id="name2"><br>
+    <button id="del">文件外存删除</button><br>
+    <br>
+    <button id="refresh">清空系统</button><br>
+</div>
+<div id="direct">
+
+</div>
+<div id="inMemory">
+
+</div>
+<div id="outMemory">
+
+</div>
+<script>
+    var tmp={
+        "flag": "1",
+        "mem" : 8,
+        "address":"-1",
+        "name": "file0",
+        "content": "success",
+        "path" : "root/child1/child2/child3/",
+        "user" : "lsy",
+        "time" : "1208",
+    };
+    function succ(data){
+        $("#direct").html(
+            data.direct.direct
+        );
+        let i=0,str="<pre>";
+        for(let key in data.inMemory.inMemory){
+            ++i;
+            str+=key+":"+data.inMemory.inMemory[key]+" ";
+            if(i%8==0) str+="\n";
+        }
+        str+="<pre>";
+        let str1="<pre>";
+        for(let key in data.outMemory.outMemory){
+            str1+=key+":"+data.outMemory.outMemory[key]+"\n";
+        }
+        str1+="<pre>";
+        $("#inMemory").html(
+            str
+        );
+        $("#outMemory").html(
+            str1
+        );
+    }
+
+    $("#refresh").click(function() {
+        $.ajax({
+            url: "/refresh",
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(tmp),
+            contentType: "application/json;charset=utf-8",
+            success: succ
+        });
+    });
+
+    $("#build").click(function(){
+        //后端加入文件内容
+        tmp.name=$("#name0").val();
+        // tmp.mem=mem;
+        // tmp.content=content;
+        tmp.path=$("#path0").val();
+        // $("#inMemory").html(
+        //     "<pre>"+tmp.name+" "+tmp.path+"<pre>"
+        // );
+        // tmp.user=user;
+        // tmp.time=time;
+        $.ajax({
+            url:"/new",
+            type:"POST",
+            dataType:"json",
+            data:JSON.stringify(tmp),
+            contentType:"application/json;charset=utf-8",
+            success:succ
+        });
+    });
+    $("#del").click(function() {
+        tmp.name=$("#name2").val();
+        tmp.path=$("#path2").val();
+        $.ajax({
+            url: "/del",
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(tmp),
+            contentType: "application/json;charset=utf-8",
+            success: succ
+        });
+    });
+    function sleep(delay) {
+        var start = (new Date()).getTime();
+        while((new Date()).getTime() - start < delay) {
+            continue;
+        }
+    }
+    let ii=0;
+    $("#run").click(function() {
+        tmp.name=$("#name1").val();
+        tmp.path=$("#path1").val();
+        $.ajax({
+            url: "/run",
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(tmp),
+            contentType: "application/json;charset=utf-8",
+        });
+        for(var i=0;i<tmp.mem+1;i++) {
+            setTimeout(function() {
+                $.ajax({
+                    url: "/get",
+                    type: "POST",
+                    dataType: "json",
+                    data: JSON.stringify(tmp),
+                    contentType: "application/json;charset=utf-8",
+                    success: succ
+                });
+            },(++ii)*1050);
+        }
+    });
+</script>
+</body>
+</html>

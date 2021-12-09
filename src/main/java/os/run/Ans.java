@@ -7,14 +7,13 @@ import os.core.Memory;
 import os.util.ResultPage;
 
 @RestController
-public class Refresh {
+public class Ans {
 
     @Autowired
     public Memory memory;
 
-    @PostMapping("/refresh")
-    public ResultPage refresh(){
-        memory.refresh();
+    @PostMapping("/get")
+    public ResultPage getAns(){
         return memory.getResultPage();
     }
 }

@@ -17,19 +17,16 @@ public class Fat{
         this.user = user;
         this.time = time;
     }
-    public HashMap<Integer,Integer> mp;
+//    public HashMap<Integer,Integer> mp;
     public int flag,mem,address;
     public String name,content,path,user,time;
 
     @Override
     public String toString() {
-        return "Fat{" +
-                "mp=" + mp +
-                ", flag=" + flag +
-                ", mem=" + mem +
+        return "{" +
+                "mem=" + mem +
                 ", address=" + address +
                 ", content='" + content + '\'' +
-                ", path='" + path + '\'' +
                 ", user='" + user + '\'' +
                 ", time='" + time + '\'' +
                 '}';

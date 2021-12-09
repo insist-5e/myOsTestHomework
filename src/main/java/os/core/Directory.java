@@ -73,14 +73,16 @@ public class Directory{
         if(vt.get(root)==null) return ans.toString();
         for(String pi:vt.get(root)){
             ans.append("\n"+pre+pi);
+            Fat fat=mp.get(pi);
+            if(mp.get(pi)!=null) ans.append(fat.toString());
             getDfs(ans,pi,pre+"   ");
         }
         return ans.toString();
     }
     public Direct getDir(){
         Direct direct = new Direct();
-        StringBuffer ans=new StringBuffer("");
-        direct.direct=getDfs(ans,"root","");
+        StringBuffer ans=new StringBuffer("<pre>");
+        direct.direct=getDfs(ans,"root","")+"<pre>";
         return direct;
     }
 }

@@ -24,10 +24,6 @@ public class Memory{
     @Autowired
     public Directory dir;
 
-    public boolean isFree(){
-        if(MAXX-(hou-qian+1)>=8) return true;
-        return false;
-    }
     public void fro(int flag,String name,int i){
         Pair<String,Integer> tmp=new Pair<>();
         tmp.setKey(name);tmp.setValue(i);
@@ -38,11 +34,12 @@ public class Memory{
                 qian++;
             }
             else{
-                idx++;
-                mp.put(tmp,idx);
-                mmp.put(idx,tmp);
+                for(int ii=0;ii<64;ii++){
+                    if(mmp.get(ii)==null){idx=ii;break;}
+                }
+                mp.put(tmp,idx);mmp.put(idx,tmp);
             }
-            qu[++hou]=tmp;flag=hou;
+            qu[++hou]=tmp;
         }
     }
     public void LRU(String name,int i){
@@ -58,11 +55,7 @@ public class Memory{
         fro(flag,tmp.getKey(),tmp.getValue());
     }
     public void fileC(String name){
-        if(!isFree()){
-            System.out.println("内存不足，进行置换！");
-        }
         Fat fat=dir.getFat(name);
-        if(fat.mp==null) fat.mp=new HashMap<>();
         for(int i=1;i<=fat.mem;i++){
             synchronized (this) {
                 LRU(name, i);
@@ -73,18 +66,21 @@ public class Memory{
                 }
             }
         }
-        for(Pair<String,Integer> key:mp.keySet()){
-            if(key.getKey().equals(name)){
-                fat.mp.put(key.getValue(),mp.get(key));
-            }
-        }
+        free(name);
     }
-    public void free(){
-        mp=new HashMap<>();
-        idx=-1;qian=1;hou=0;
-        qu=new Pair[100005];
-        for(String pi:dir.mp.keySet()){
-            dir.mp.get(pi).mp=null;
+    public void free(String name){
+        Pair<String,Integer> tmp=new Pair<>();
+        tmp.setKey(name);
+        for(int i=1;i<=dir.mp.get(name).mem;i++){
+            tmp.setValue(i);
+            mmp.remove(mp.get(tmp));
+            mp.remove(tmp);
+            for(int j=hou;j>=qian;j--){
+                if(qu[j].equals(tmp)){
+                    for(int k=j+1;k<=hou;k++) qu[k-1]=qu[k];
+                    hou--;break;
+                }
+            }
         }
     }
     public HashMap<Integer,String> getAns(){
