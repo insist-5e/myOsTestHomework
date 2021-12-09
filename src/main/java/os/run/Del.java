@@ -22,7 +22,9 @@ public class Del{
 
     @PostMapping("/del")
     public ResultPage delFile(@RequestBody Fat fat){
+
         memory.dir.rm(1, fat.name, fat);
         return memory.getResultPage();
+
     }
 }
